@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Cashflow Minimizer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container auth-container">
+    <!-- Login Form -->
+    <div id="loginForm">
+      <h2><i class="fas fa-money-bill-wave"></i> Cashflow Minimizer</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        Welcome back! Please sign in to your account.
+      </p>
+      
+      <div class="input-group">
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="Username" data-validate="username" />
+        </div>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Password" data-validate="password" />
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button class="btn-primary" onclick="loginUser()">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+      </div>
+      
+      <div class="auth-switch">
+        <p>Don't have an account? <a href="#" id="showRegister">Create one here</a></p>
+      </div>
+    </div>
+
+    <!-- Register Form -->
+    <div id="registerForm" style="display: none;">
+      <h2><i class="fas fa-user-plus"></i> Create Account</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        Join us and start managing your cashflow efficiently!
+      </p>
+      
+      <div class="input-group">
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <input type="text" id="regUsername" placeholder="Username" data-validate="username" />
+        </div>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="regPassword" placeholder="Password" data-validate="password" />
+        </div>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="confirmPassword" placeholder="Confirm Password" data-validate="password" />
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button class="btn-success" onclick="registerUser()">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+      </div>
+      
+      <div class="auth-switch">
+        <p>Already have an account? <a href="#" id="showLogin">Sign in here</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginForm = document.getElementById("loginForm");
+      const registerForm = document.getElementById("registerForm");
+
+      document.getElementById("showRegister").addEventListener("click", (e) => {
+        e.preventDefault();
+        loginForm.style.display = "none";
+        registerForm.style.display = "block";
+        registerForm.style.opacity = "0";
+        setTimeout(() => {
+          registerForm.style.opacity = "1";
+        }, 50);
+      });
+
+      document.getElementById("showLogin").addEventListener("click", (e) => {
+        e.preventDefault();
+        registerForm.style.display = "none";
+        loginForm.style.display = "block";
+        loginForm.style.opacity = "0";
+        setTimeout(() => {
+          loginForm.style.opacity = "1";
+        }, 50);
+      });
+
+      // Add enter key support
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          if (loginForm.style.display !== 'none') {
+            loginUser();
+          } else {
+            registerUser();
+          }
+        }
+      });
+
+      checkLoginState(); // Redirect if already logged in
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transaction History - Cashflow Minimizer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <h2><i class="fas fa-history"></i> Transaction History</h2>
+    
+    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+      View and filter your transaction history to track your cashflow over time.
+    </p>
+
+    <div class="filters">
+      <div class="input-with-icon">
+        <i class="fas fa-filter"></i>
+        <select id="filterType" onchange="applyFilters()">
+          <option value="all">All Transactions</option>
+          <option value="sent">Money Sent</option>
+          <option value="received">Money Received</option>
+        </select>
+      </div>
+
+      <div class="input-with-icon">
+        <i class="fas fa-calendar"></i>
+        <input type="date" id="fromDate" onchange="applyFilters()" />
+      </div>
+
+      <div class="input-with-icon">
+        <i class="fas fa-calendar"></i>
+        <input type="date" id="toDate" onchange="applyFilters()" />
+      </div>
+
+      <div class="input-with-icon">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchPerson" placeholder="Search by name" onkeyup="applyFilters()" />
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="summary-box negative">
+        <h3><i class="fas fa-arrow-up"></i> Total Sent</h3>
+        <p id="totalSent">₹0</p>
+      </div>
+      <div class="summary-box positive">
+        <h3><i class="fas fa-arrow-down"></i> Total Received</h3>
+        <p id="totalReceived">₹0</p>
+      </div>
+      <div class="summary-box">
+        <h3><i class="fas fa-balance-scale"></i> Net Balance</h3>
+        <p id="netBalance">₹0</p>
+      </div>
+    </div>
+
+    <div class="transactions-section">
+      <h3><i class="fas fa-list"></i> Transaction History</h3>
+      <div id="history-list"></div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn-primary" onclick="backToApp()">
+        <i class="fas fa-arrow-left"></i> Back to App
+      </button>
+      <button class="btn-gray" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    function showAllHistory() {
+      document.getElementById('fromDate').value = '';
+      document.getElementById('toDate').value = '';
+      applyFilters();
+    }
+    document.addEventListener('DOMContentLoaded', showAllHistory);
+    window.addEventListener('pageshow', showAllHistory);
+  </script>
+</body>
+
+</html>

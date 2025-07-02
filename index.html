@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cashflow Minimizer</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(200, 210, 230, 0.18);
+    }
+
+    .toast-animate {
+      animation: toast-in 0.5s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    @keyframes toast-in {
+      0% {
+        transform: translateY(-40px) scale(0.95);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-100 via-blue-50 to-white min-h-screen text-slate-800" onload="checkLogin()">
+  <!-- Navbar -->
+  <nav class="w-full bg-white/80 glass shadow-md py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-30">
+    <div class="flex items-center gap-3">
+      <span class="bg-blue-100 p-2 rounded-xl"><i class="fas fa-money-bill-wave fa-lg text-blue-500"></i></span>
+      <span class="font-extrabold text-xl tracking-tight">Cashflow Minimizer</span>
+    </div>
+    <div class="flex gap-4 items-center">
+      <a href="index.html"
+        class="text-slate-700 hover:text-blue-600 font-medium transition-colors flex items-center gap-1"><i
+          class="fas fa-home"></i> Home</a>
+      <a href="history.html"
+        class="text-slate-700 hover:text-blue-600 font-medium transition-colors flex items-center gap-1"><i
+          class="fas fa-list"></i> History</a>
+      <button onclick="logout()"
+        class="ml-2 bg-slate-100 hover:bg-blue-100 text-blue-700 font-semibold px-4 py-2 rounded-lg shadow transition-all flex items-center gap-2"><i
+          class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </nav>
+  <div class="pt-24 pb-8 flex flex-col items-center min-h-screen">
+    <div class="w-full max-w-5xl px-4">
+      <!-- Dashboard Summary -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="glass p-6 flex flex-col items-center text-center shadow-lg group hover:scale-105 transition-all">
+          <div class="bg-blue-100 p-3 rounded-full mb-2"><i class="fas fa-list fa-lg text-blue-500"></i></div>
+          <h3 class="font-semibold text-lg text-slate-700">Total Transactions</h3>
+          <p id="totalTransactions" class="text-3xl font-bold text-blue-600 mt-1 transition-all">0</p>
+        </div>
+        <div class="glass p-6 flex flex-col items-center text-center shadow-lg group hover:scale-105 transition-all">
+          <div class="bg-blue-50 p-3 rounded-full mb-2"><i class="fas fa-rupee-sign fa-lg text-blue-400"></i></div>
+          <h3 class="font-semibold text-lg text-slate-700">Total Amount</h3>
+          <p id="totalAmount" class="text-3xl font-bold text-blue-500 mt-1 transition-all">₹0</p>
+        </div>
+        <div class="glass p-6 flex flex-col items-center text-center shadow-lg group hover:scale-105 transition-all">
+          <div class="bg-green-50 p-3 rounded-full mb-2"><i class="fas fa-users fa-lg text-green-500"></i></div>
+          <h3 class="font-semibold text-lg text-slate-700">Active Members</h3>
+          <p id="activeMembers" class="text-3xl font-bold text-green-600 mt-1 transition-all">0</p>
+        </div>
+      </div>
+      <!-- Transaction Form -->
+      <div class="glass p-6 mb-8 shadow-lg">
+        <form class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4" onsubmit="addTransaction(); return false;">
+          <div class="relative">
+            <input type="text" id="payer" placeholder="Payer Name"
+              class="peer w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 bg-white/80 placeholder-slate-400 transition-all" />
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400"><i class="fas fa-user"></i></span>
+          </div>
+          <div class="relative">
+            <input type="text" id="receiver" placeholder="Receiver Name"
+              class="peer w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 bg-white/80 placeholder-slate-400 transition-all" />
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400"><i
+                class="fas fa-user-friends"></i></span>
+          </div>
+          <div class="relative">
+            <input type="number" id="amount" placeholder="Amount" min="0"
+              class="peer w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-green-200 focus:border-green-400 bg-white/80 placeholder-slate-400 transition-all" />
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-green-400"><i
+                class="fas fa-rupee-sign"></i></span>
+          </div>
+          <button type="submit"
+            class="col-span-1 md:col-span-3 mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2"><i
+              class="fas fa-plus"></i> Add Transaction</button>
+        </form>
+        <div class="flex flex-wrap gap-2 justify-center">
+          <button
+            class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg shadow hover:scale-105 transition-all flex items-center gap-2"
+            onclick="calculateSettlement()"><i class="fas fa-calculator"></i> Settle Up</button>
+          <button
+            class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-4 py-2 rounded-lg shadow hover:scale-105 transition-all flex items-center gap-2"
+            onclick="resetAll()"><i class="fas fa-trash"></i> Reset All</button>
+        </div>
+      </div>
+      <!-- Recent Transactions -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fas fa-list"></i> Recent
+          Transactions</h3>
+        <div id="transactions-list" class="space-y-4"></div>
+        <div id="empty-transactions" class="hidden flex flex-col items-center justify-center py-12">
+          <svg width="80" height="80" fill="none" viewBox="0 0 80 80">
+            <rect width="80" height="80" rx="20" fill="#f3f4f6" />
+            <path d="M24 40h32M24 48h32M24 32h32" stroke="#a5b4fc" stroke-width="3" stroke-linecap="round" />
+          </svg>
+          <p class="text-slate-400 mt-4">No transactions yet. Add your first transaction above!</p>
+        </div>
+      </div>
+      <!-- Settlement Plan -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fas fa-handshake"></i>
+          Settlement Plan</h3>
+        <div id="settlement" class="space-y-4"></div>
+        <div id="empty-settlement" class="hidden flex flex-col items-center justify-center py-12">
+          <svg width="80" height="80" fill="none" viewBox="0 0 80 80">
+            <rect width="80" height="80" rx="20" fill="#f3f4f6" />
+            <path d="M24 40h32" stroke="#a5b4fc" stroke-width="3" stroke-linecap="round" />
+          </svg>
+          <p class="text-slate-400 mt-4">No settlements to show.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-6 right-4 z-50 flex flex-col gap-3"></div>
+  <script src="script.js"></script>
+  <script>
+    // Show/hide empty state SVGs for transactions/settlement
+    function updateEmptyStates() {
+      const txList = document.getElementById('transactions-list');
+      const txEmpty = document.getElementById('empty-transactions');
+      if (txList && txEmpty) {
+        txEmpty.classList.toggle('hidden', txList.children.length > 0);
+      }
+      const stList = document.getElementById('settlement');
+      const stEmpty = document.getElementById('empty-settlement');
+      if (stList && stEmpty) {
+        stEmpty.classList.toggle('hidden', stList.children.length > 0);
+      }
+    }
+    // Patch notification toasts to use Tailwind glassmorphism
+    window.showNotification = function (message, type = 'info') {
+      const icons = {
+        success: 'check-circle', error: 'exclamation-circle', warning: 'exclamation-triangle', info: 'info-circle'
+      };
+      const colors = {
+        success: 'from-green-500 to-blue-400',
+        error: 'from-pink-500 to-yellow-400',
+        warning: 'from-yellow-300 to-orange-400',
+        info: 'from-blue-400 to-slate-200'
+      };
+      const textColors = {
+        success: 'text-white', error: 'text-white', warning: 'text-slate-900', info: 'text-slate-800'
+      };
+      const toast = document.createElement('div');
+      toast.className = `toast-animate glass px-6 py-4 rounded-xl shadow-lg flex items-center gap-3 bg-gradient-to-r ${colors[type] || colors.info} ${textColors[type] || textColors.info}`;
+      toast.innerHTML = `<i class='fas fa-${icons[type] || icons.info} fa-lg'></i><span class='font-semibold'>${message}</span>`;
+      document.getElementById('toast-container').appendChild(toast);
+      setTimeout(() => toast.classList.add('opacity-0', 'translate-y-4'), 3500);
+      setTimeout(() => toast.remove(), 4000);
+    };
+    // Listen for transaction/settlement changes to update empty states
+    const observer = new MutationObserver(updateEmptyStates);
+    observer.observe(document.getElementById('transactions-list'), { childList: true });
+    observer.observe(document.getElementById('settlement'), { childList: true });
+    document.addEventListener('DOMContentLoaded', updateEmptyStates);
+  </script>
+</body>
+
+</html>
